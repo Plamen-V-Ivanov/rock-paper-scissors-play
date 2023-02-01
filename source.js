@@ -1,8 +1,3 @@
-function getComputerChoice() {
-    let choices = ["rock", "paper", "scissors"];
-    return choices[Math.floor((Math.random() * choices.length))];
-}
-
 const winningConditions = {
     "rock": "scissors",
     "paper": "rock",
@@ -21,37 +16,100 @@ const winMessages = {
     "rock": "You Win! Rock beats Scissors",
 };
 
+let playerScore = 0;
+let computerScore = 0;
+let currRoundMessage = "";
+
+
+function getComputerChoice() {
+
+    let choices = ["rock", "paper", "scissors"];
+    return choices[Math.floor((Math.random() * choices.length))];
+
+}
+
+function checkForWinCondition(){
+
+    if (playerScore + computerScore >= 5 || playerScore >= 3 || computerScore >= 3) {
+        if (playerScore > computerScore) {
+            winnerMessageElement.textContent = "Congratulations, You Won!"
+        } else if (computerScore > playerScore) {
+            winnerMessageElement.textContent = "Sorry, You Lost!"
+        } else {
+            winnerMessageElement.textContent = "The Game Is Tie! You Should Not Cheat, Using Developer Tool!"
+        } 
+        return true;
+    }
+    return false;
+
+}
+
+function updatePageRoundChoices(playerSelection, computerSelection) {
+
+    playerChoiceElement.textContent = playerSelection;
+    computerChoiceElement.textContent = computerSelection;
+    return;
+
+}
 
 function playRound(playerSelection, computerSelection) {
 
-    if (!winningConditions[playerSelection]){
-        return "Input a valid choice!"
+    if(checkForWinCondition()){
+        return;
+    }
+
+    if (!winningConditions[playerSelection]) {
+        currRoundMessage = "Input a valid choice!"
     }
 
     if (playerSelection == computerSelection) {
-        return "Tie!";
+        currRoundMessage = "Tie!";
     };
 
-
     if (winningConditions[playerSelection] == computerSelection) {
-        return winMessages[playerSelection];
+        playerScore += 1;
+        currRoundMessage = winMessages[playerSelection];
     }
-    return loseMessages[playerSelection];
+
+    if (winningConditions[playerSelection] != computerSelection) {
+        computerScore += 1;
+        currRoundMessage = loseMessages[playerSelection];
+    }
+
+    if(checkForWinCondition()){
+        return;
+    }
 
 }
 
-function game() {
-    for (let i = 0; i < 5; i++) {
-        let playerSelection = prompt("Make your choice! Rock, Paper or Scissors?").toLocaleLowerCase();
-        let computerSelection = getComputerChoice();
-        console.log(playRound(playerSelection, computerSelection));
+function game(playerSelection) {
 
-    }
+    let computerSelection = getComputerChoice();
+    playRound(playerSelection, computerSelection);
+    updatePageRoundChoices(playerSelection, computerSelection);
+
+    roundMessageElement.textContent = currRoundMessage;
+    playerScoreElement.textContent = playerScore;
+    computerScoreElement.textContent = computerScore;
+
 }
 
-game();
+const playButtons = document.getElementsByClassName('play-btn');
+const playerScoreElement = document.getElementById('player-score');
+const computerScoreElement = document.getElementById('computer-score');
+const roundMessageElement = document.getElementById('round-message');
+const winnerMessageElement = document.getElementById('winner-message');
+const playerChoiceElement = document.getElementById('player-choice');
+const computerChoiceElement = document.getElementById('computer-choice');
 
+Array.from(playButtons).forEach(btn => {
+    btn.addEventListener('click', playEvent);
+});
 
+function playEvent(e) {
 
-
-
+    const playerChoice = e.target.textContent.toLowerCase();
+    console.log(playerChoice);
+    game(playerChoice);
+    
+}
