@@ -1,31 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="source.js" defer></script>
+    <link rel="stylesheet" href="./style/style.css">
 </head>
 
-<button class="play-btn">PAPER</button>
-<button class="play-btn">SCISSORS</button>
-<button class="play-btn">ROCK</button>
+<div id="choice-section">
+    <div id="choice-message">Make Your Choice! Best out of five wins!</div>
+    <div id="buttons-section">
+        <button class="play-btn">PAPER</button>
+        <button class="play-btn">SCISSORS</button>
+        <button class="play-btn">ROCK</button>
+    </div>
+</div>
 
-<div id="player-score"></div>
-<div id="computer-score"></div>
+<div id="score-section">
+    <div class="score-column">
+        <div>You</div>
+        <div class="table-block">
+            <div class="label">Choice:</div>
+            <div class="label" id="player-choice"></div>
+        </div>
+        <div class="table-block">
+            <div class="label">Score:</div>
+            <div class="label" id="player-score"></div>
+        </div>
+ 
+    </div>
+    <div class="divider">
+        <div class="loader"></div>
+    </div>
 
-<div id="player-choice"></div>
-<div id="computer-choice"></div>
+
+    <div class="score-column">
+        <div>Computer</div>
+        <div class="table-block">
+            <div class="label">Choice:</div>
+            <div class="label" id="computer-choice"></div>
+        </div>
+        <div class="table-block">
+            <div class="label">Score:</div>
+            <div class="label" id="computer-score"></div>
+        </div>
+    </div>
+
+</div>
 
 <div id="round-message"></div>
+
 <div id="winner-message"></div>
 
+<div id="final-score"> </div>
 
+<button id="play-again-btn">Play Again</button>
 
 <body>
 
     <script src="/source.js"></script>
-    
+
 </body>
+
 </html>

@@ -28,7 +28,7 @@ function getComputerChoice() {
 
 }
 
-function checkForWinCondition(){
+function checkForWinCondition() {
 
     if (playerScore + computerScore >= 5 || playerScore >= 3 || computerScore >= 3) {
         if (playerScore > computerScore) {
@@ -37,7 +37,8 @@ function checkForWinCondition(){
             winnerMessageElement.textContent = "Sorry, You Lost!"
         } else {
             winnerMessageElement.textContent = "The Game Is Tie! You Should Not Cheat, Using Developer Tool!"
-        } 
+        }
+        endGamePage();
         return true;
     }
     return false;
@@ -46,24 +47,26 @@ function checkForWinCondition(){
 
 function updatePageRoundChoices(playerSelection, computerSelection) {
 
-    playerChoiceElement.textContent = playerSelection;
-    computerChoiceElement.textContent = computerSelection;
+    playerChoiceElement.textContent = playerSelection.toUpperCase();
+    computerChoiceElement.textContent = computerSelection.toUpperCase();
     return;
 
 }
 
 function playRound(playerSelection, computerSelection) {
 
-    if(checkForWinCondition()){
+    if (checkForWinCondition()) {
         return;
     }
 
     if (!winningConditions[playerSelection]) {
         currRoundMessage = "Input a valid choice!"
+        return;
     }
 
     if (playerSelection == computerSelection) {
         currRoundMessage = "Tie!";
+        return;
     };
 
     if (winningConditions[playerSelection] == computerSelection) {
@@ -76,7 +79,7 @@ function playRound(playerSelection, computerSelection) {
         currRoundMessage = loseMessages[playerSelection];
     }
 
-    if(checkForWinCondition()){
+    if (checkForWinCondition()) {
         return;
     }
 
@@ -94,7 +97,43 @@ function game(playerSelection) {
 
 }
 
+function endGamePage() {
+
+    scoreSection.style.display = 'none';
+    choiceSection.style.display = 'none';
+    Array.from(scoreStatistics).map(scoreColumn => scoreColumn.style.display = 'none');
+    roundMessageElement.style.display = 'none';
+
+    finalScore.textContent = (`Final score: ${playerScore}:${computerScore}`)
+    winnerMessageElement.style.display = 'block';
+    finalScore.style.display = 'block';
+    playAgainBtn.style.display = 'block';
+
+}
+
+function BackToPlayPage() {
+
+    playerScore = 0;
+    computerScore = 0;
+
+    choiceSection.style.display = 'block';
+    scoreSection.style.display = 'flex';
+    roundMessageElement.style.display = 'block';
+
+    playerScoreElement.textContent = '';
+    computerScoreElement.textContent = '';
+    playerChoiceElement.textContent = '';
+    computerChoiceElement.textContent = '';
+    roundMessageElement.textContent = '';
+
+    winnerMessageElement.style.display = 'none';
+    finalScore.style.display = 'none';
+    playAgainBtn.style.display = 'none';
+
+}
+
 const playButtons = document.getElementsByClassName('play-btn');
+const scoreStatistics = document.getElementsByClassName('score-column')
 const playerScoreElement = document.getElementById('player-score');
 const computerScoreElement = document.getElementById('computer-score');
 const roundMessageElement = document.getElementById('round-message');
@@ -102,14 +141,44 @@ const winnerMessageElement = document.getElementById('winner-message');
 const playerChoiceElement = document.getElementById('player-choice');
 const computerChoiceElement = document.getElementById('computer-choice');
 
+const choiceSection = document.getElementById('choice-section');
+const scoreSection = document.getElementById('score-section');
+const finalScore = document.getElementById('final-score');
+const playAgainBtn = document.getElementById('play-again-btn');
+const animation = document.querySelector('.loader');
+
+
 Array.from(playButtons).forEach(btn => {
     btn.addEventListener('click', playEvent);
 });
 
-function playEvent(e) {
+playAgainBtn.addEventListener('click', BackToPlayPage);
 
+function playEvent(e) {
     const playerChoice = e.target.textContent.toLowerCase();
-    console.log(playerChoice);
-    game(playerChoice);
-    
+    Array.from(scoreStatistics).map(scoreColumn => scoreColumn.style.display = 'flex');
+    triggerAnimation();
+    setTimeout(() => game(playerChoice), 1000);
 }
+
+function triggerAnimation() {
+    reverseVisibility('hidden');
+    Array.from(playButtons).forEach(btn => {
+        btn.disabled = true;
+    });
+    animation.style.display = 'block';
+
+    setTimeout(function () {
+        animation.style.display = 'none'
+        Array.from(playButtons).forEach(btn => {
+            btn.disabled = false;
+        });
+        reverseVisibility('visible');
+    }, 1000);
+}
+
+function reverseVisibility(option) {
+    Array.from(scoreStatistics).map(scoreColumn => scoreColumn.style.visibility = option);
+    roundMessageElement.style.visibility = option;
+    animation.style.display = option;
+};
